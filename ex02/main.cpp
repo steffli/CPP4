@@ -29,14 +29,14 @@ int main(){
 		for (int k = N / 2; k < N; k++)
 			animals[k] = new Cat();
 		for (int k = 0; k < N; k++)
-			delete animals[k]; // virtual destructor -> correct chain, no Brain leak
+			delete animals[k];
 	}
 
 	std::cout << "\n===== WrongAnimal: no virtual dispatch =====" << std::endl;
 	{
 		WrongAnimal* w = new WrongCat();
 		std::cout << "w->getType():   " << w->getType() << std::endl;
-		std::cout << "w->makeSound(): "; w->makeSound(); // prints WrongAnimal sound, NOT Meow
+		std::cout << "w->makeSound(): "; w->makeSound();
 		delete w;
 	}
 

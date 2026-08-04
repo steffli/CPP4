@@ -17,14 +17,14 @@ int main(){
 	for (int k = N / 2; k < N; k++)
 		animals[k] = new Cat();
 	for (int k = 0; k < N; k++)
-		delete animals[k]; // virtual destructor -> correct chain
+		delete animals[k];
 
 	std::cout << "\n===== Deep copy verification (Dog) =====" << std::endl;
 	Dog original;
 	original.setIdea(0, "Chase the cat");
 	std::cout << "original idea[0]: " << original.getIdea(0) << std::endl;
 
-	Dog copy = original; // copy ctor
+	Dog copy = original; 
 	std::cout << "copy idea[0]:    " << copy.getIdea(0) << std::endl;
 
 	original.setIdea(0, "Eat the bone");
