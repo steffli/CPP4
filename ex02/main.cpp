@@ -6,7 +6,7 @@
 
 int main(){
 	// Animal a;              // error: cannot declare variable of abstract type 'Animal'
-	// const Animal* a = new Animal(); // error: invalid new-expression of abstract class type 'Animal'
+	// const Animal* a = new Animal();
 
 	std::cout << "===== Polymorphism through abstract Animal* =====" << std::endl;
 	{
