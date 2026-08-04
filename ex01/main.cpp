@@ -1,42 +1,45 @@
 #include "Animal.hpp"
 #include "Dog.hpp"
 #include "Cat.hpp"
-#include "WrongAnimal.hpp"
-#include "WrongCat.hpp"
 
 int main(){
-	//Tests from the subject
-	const Animal* meta = new Animal();
+	std::cout << "===== Subject leak test =====" << std::endl;
 	const Animal* j = new Dog();
 	const Animal* i = new Cat();
-	std::cout << j->getType() << " " << std::endl;
-	std::cout << i->getType() << " " << std::endl;
-	i->makeSound(); //will output the cat sound!
-	j->makeSound();
-	meta->makeSound();
-	delete meta;
-	delete j;
+	delete j; // must not leak the Brain
 	delete i;
 
-	std::cout << "----- WrongAnimal tests -----" << std::endl;
-	const WrongAnimal* wrongMeta = new WrongAnimal();
-	const WrongAnimal* wrongI = new WrongCat();
-	std::cout << wrongI->getType() << " " << std::endl;
-	wrongI->makeSound(); //will output the WrongAnimal sound!
-	wrongMeta->makeSound();
-	delete wrongMeta;
-	delete wrongI;
+	std::cout << "\n===== Array of Animals =====" << std::endl;
+	const int N = 4;
+	Animal* animals[N];
+	for (int k = 0; k < N / 2; k++)
+		animals[k] = new Dog();
+	for (int k = N / 2; k < N; k++)
+		animals[k] = new Cat();
+	for (int k = 0; k < N; k++)
+		delete animals[k]; // virtual destructor -> correct chain
 
-	std::cout << "----- Extra tests -----" << std::endl;
-	const WrongCat* wrongCat = new WrongCat();
-	wrongCat->makeSound(); //direct WrongCat object still meows
-	delete wrongCat;
+	std::cout << "\n===== Deep copy verification (Dog) =====" << std::endl;
+	Dog original;
+	original.setIdea(0, "Chase the cat");
+	std::cout << "original idea[0]: " << original.getIdea(0) << std::endl;
 
-	Dog dog;
-	Dog dogCopy(dog);
-	Cat cat;
-	cat = cat;
-	std::cout << dogCopy.getType() << " " << std::endl;
-	dogCopy.makeSound();
+	Dog copy = original; // copy ctor
+	std::cout << "copy idea[0]:    " << copy.getIdea(0) << std::endl;
+
+	original.setIdea(0, "Eat the bone");
+	std::cout << "after changing original->idea[0] to 'Eat the bone'..." << std::endl;
+	std::cout << "original idea[0]: " << original.getIdea(0) << std::endl;
+	std::cout << "copy idea[0]:    " << copy.getIdea(0) << std::endl;
+
+	std::cout << "\n--- assignment deep copy test ---" << std::endl;
+	Dog assigned;
+	assigned = original;
+	std::cout << "assigned idea[0]: " << assigned.getIdea(0) << std::endl;
+	original.setIdea(0, "Sleep");
+	std::cout << "after changing original->idea[0] to 'Sleep'..." << std::endl;
+	std::cout << "original idea[0]:  " << original.getIdea(0) << std::endl;
+	std::cout << "assigned idea[0]:  " << assigned.getIdea(0) << std::endl;
+
 	return 0;
 }
